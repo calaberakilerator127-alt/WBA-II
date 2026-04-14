@@ -1,0 +1,455 @@
+{
+    "player1": {
+        "username": "player1",
+        "password": "1234",
+        "brawels": 500,
+        "puntos": 0,
+        "fighters": [
+            {
+                "id": "598686db",
+                "name": "Alexander",
+                "stats": {
+                    "fuerza": 13,
+                    "poder": 10,
+                    "velocidad": 10,
+                    "resistencia_fisica": 5,
+                    "resistencias_elementales": {},
+                    "estamina_max": 100,
+                    "energia_max": 100,
+                    "equilibrio_max": 100
+                },
+                "moves": [
+                    {
+                        "name": "Golpe R\u00e1pido",
+                        "type": "Fisico",
+                        "cost": 5,
+                        "base_damage": 15,
+                        "multiplier": 1.0,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": null
+                    },
+                    {
+                        "name": "Chispa M\u00e1gica",
+                        "type": "Magico",
+                        "cost": 10,
+                        "base_damage": 20,
+                        "multiplier": 1.1,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": "Luz"
+                    }
+                ],
+                "level": 1,
+                "xp": 0,
+                "hp": 100.0,
+                "max_hp": 100.0,
+                "hype": 0.0,
+                "equilibrio": 100.0,
+                "estamina": 100.0,
+                "energia": 100.0,
+                "hospital_fianza": 0,
+                "is_recovering": false,
+                "usage_count": 0
+            }
+        ],
+        "inventory": {},
+        "inventory_max": 10,
+        "wins": 0,
+        "losses": 0,
+        "mvp_count": 0,
+        "total_damage_dealt": 0
+    },
+    "player2": {
+        "username": "player2",
+        "password": "1234",
+        "brawels": 500,
+        "puntos": 0,
+        "fighters": [
+            {
+                "id": "ed431747",
+                "name": "Angelica",
+                "stats": {
+                    "fuerza": 10,
+                    "poder": 10,
+                    "velocidad": 10,
+                    "resistencia_fisica": 5,
+                    "resistencias_elementales": {},
+                    "estamina_max": 100,
+                    "energia_max": 100,
+                    "equilibrio_max": 100
+                },
+                "moves": [
+                    {
+                        "name": "Golpe R\u00e1pido",
+                        "type": "Fisico",
+                        "cost": 5,
+                        "base_damage": 15,
+                        "multiplier": 1.0,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": null
+                    },
+                    {
+                        "name": "Chispa M\u00e1gica",
+                        "type": "Magico",
+                        "cost": 10,
+                        "base_damage": 20,
+                        "multiplier": 1.1,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": "Luz"
+                    }
+                ],
+                "level": 1,
+                "xp": 0,
+                "hp": 100.0,
+                "max_hp": 100.0,
+                "hype": 0.0,
+                "equilibrio": 100.0,
+                "estamina": 100.0,
+                "energia": 100.0,
+                "hospital_fianza": 0,
+                "is_recovering": false,
+                "usage_count": 0
+            }
+        ],
+        "inventory": {},
+        "inventory_max": 10,
+        "wins": 0,
+        "losses": 0,
+        "mvp_count": 0,
+        "total_damage_dealt": 0
+    },
+    "a": {
+        "username": "a",
+        "real_name": "",
+        "password": "aa",
+        "avatar_path": "assets/images/profile/masculino/Amsterdam.png",
+        "settings": {
+            "master_vol": 0.5,
+            "music_vol": 0.13,
+            "sfx_vol": 0.59,
+            "fullscreen": 0.0
+        },
+        "key_bindings": {
+            "UP": 1073741906,
+            "DOWN": 1073741905,
+            "LEFT": 1073741904,
+            "RIGHT": 1073741903,
+            "CONFIRM": 13,
+            "BACK": 27,
+            "TRAIN": 32,
+            "STATS": 9
+        },
+        "brawels": 218,
+        "puntos": 0,
+        "fighters": [
+            {
+                "id": "cbf36ebf",
+                "name": "Angelica",
+                "stats": {
+                    "fuerza": 69,
+                    "poder": 36,
+                    "velocidad": 21,
+                    "resistencia_fisica": 5,
+                    "resistencias_elementales": {},
+                    "estamina_max": 100,
+                    "energia_max": 100,
+                    "equilibrio_max": 100
+                },
+                "moves": [
+                    {
+                        "name": "Golpe R\u00e1pido",
+                        "type": "Fisico",
+                        "cost": 5,
+                        "base_damage": 15,
+                        "multiplier": 1.0,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": null,
+                        "effect": null
+                    },
+                    {
+                        "name": "Chispa M\u00e1gica",
+                        "type": "Magico",
+                        "cost": 10,
+                        "base_damage": 20,
+                        "multiplier": 1.1,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": "Luz",
+                        "effect": null
+                    },
+                    {
+                        "name": "Chispa",
+                        "type": "Magico",
+                        "cost": 12,
+                        "base_damage": 18,
+                        "multiplier": 1.0,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": "Fuego",
+                        "effect": {
+                            "name": "Quemado",
+                            "type": "dot",
+                            "value": 5.0,
+                            "duration": 3,
+                            "stacks": 1,
+                            "element": null
+                        }
+                    },
+                    {
+                        "name": "Drenaje",
+                        "type": "Magico",
+                        "cost": 20,
+                        "base_damage": 20,
+                        "multiplier": 1.0,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": "Oscuridad",
+                        "effect": {
+                            "name": "Vampirismo",
+                            "type": "lifesteal",
+                            "value": 0.3,
+                            "duration": 2,
+                            "stacks": 1,
+                            "element": null
+                        }
+                    },
+                    {
+                        "name": "Llama",
+                        "type": "Magico",
+                        "cost": 20,
+                        "base_damage": 30,
+                        "multiplier": 1.0,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": "Fuego",
+                        "effect": {
+                            "name": "Quemado",
+                            "type": "dot",
+                            "value": 10.0,
+                            "duration": 3,
+                            "stacks": 1,
+                            "element": null
+                        }
+                    },
+                    {
+                        "name": "Carga Corporal",
+                        "type": "Fisico",
+                        "cost": 20,
+                        "base_damage": 25,
+                        "multiplier": 1.0,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": null,
+                        "effect": null
+                    }
+                ],
+                "level": 8,
+                "xp": 220,
+                "hp": 100.0,
+                "max_hp": 100.0,
+                "sprite_path": "assets/images/characters/Angelica.png",
+                "portrait_path": "assets/images/characters/Angelica.png",
+                "avatar_path": null,
+                "entrance_theme": null,
+                "hype": 0.0,
+                "equilibrio": 100.0,
+                "estamina": 55,
+                "energia": 36,
+                "status_effects": [],
+                "stat_points": 7,
+                "hospital_fianza": 0,
+                "is_recovering": false,
+                "usage_count": 0,
+                "biography": "Un valiente luchador de la arena.",
+                "elemental_affinity": "Neutral"
+            }
+        ],
+        "inventory": {
+            "Complejo B12": 1,
+            "Autocar del Equipo": 2
+        },
+        "inventory_max": 10,
+        "wins": 8,
+        "losses": 0,
+        "mvp_count": 0,
+        "total_damage_dealt": 700
+    },
+    "TesterPro": {
+        "username": "TesterPro",
+        "real_name": "",
+        "password": "1234",
+        "avatar_path": "assets/images/profile/masculino/Amsterdam.png",
+        "settings": {
+            "master_vol": 0.5,
+            "music_vol": 0.5,
+            "sfx_vol": 0.5,
+            "fullscreen": 0
+        },
+        "brawels": 500,
+        "puntos": 0,
+        "fighters": [
+            {
+                "id": "225b1ada",
+                "name": "Alexander",
+                "stats": {
+                    "fuerza": 12,
+                    "poder": 10,
+                    "velocidad": 10,
+                    "resistencia_fisica": 5,
+                    "resistencias_elementales": {},
+                    "estamina_max": 100,
+                    "energia_max": 100,
+                    "equilibrio_max": 100
+                },
+                "moves": [
+                    {
+                        "name": "Golpe R\u00e1pido",
+                        "type": "Fisico",
+                        "cost": 5,
+                        "base_damage": 15,
+                        "multiplier": 1.0,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": null,
+                        "effect": null
+                    },
+                    {
+                        "name": "Chispa M\u00e1gica",
+                        "type": "Magico",
+                        "cost": 10,
+                        "base_damage": 20,
+                        "multiplier": 1.1,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": "Luz",
+                        "effect": null
+                    }
+                ],
+                "level": 2,
+                "xp": 10,
+                "hp": 100.0,
+                "max_hp": 100.0,
+                "sprite_path": null,
+                "portrait_path": null,
+                "avatar_path": null,
+                "hype": 0.0,
+                "equilibrio": 100.0,
+                "estamina": 90,
+                "energia": 100,
+                "status_effects": [],
+                "stat_points": 3,
+                "hospital_fianza": 0,
+                "is_recovering": false,
+                "usage_count": 0
+            }
+        ],
+        "inventory": {},
+        "inventory_max": 10,
+        "wins": 0,
+        "losses": 0,
+        "mvp_count": 0,
+        "total_damage_dealt": 0
+    },
+    "b": {
+        "username": "b",
+        "real_name": "",
+        "password": "bbb",
+        "avatar_path": "assets/images/profile/masculino/Brandom.png",
+        "settings": {
+            "master_vol": 0.5,
+            "music_vol": 0.5,
+            "sfx_vol": 0.5,
+            "fullscreen": 0.0
+        },
+        "key_bindings": {
+            "UP": 1073741906,
+            "DOWN": 1073741905,
+            "LEFT": 1073741904,
+            "RIGHT": 1073741903,
+            "CONFIRM": 13,
+            "BACK": 27,
+            "TRAIN": 32,
+            "STATS": 9
+        },
+        "brawels": 110,
+        "puntos": 0,
+        "fighters": [
+            {
+                "id": "ff9d18d3",
+                "name": "Alexander",
+                "stats": {
+                    "fuerza": 10,
+                    "poder": 10,
+                    "velocidad": 10,
+                    "resistencia_fisica": 5,
+                    "resistencias_elementales": {},
+                    "estamina_max": 100,
+                    "energia_max": 100,
+                    "equilibrio_max": 100
+                },
+                "moves": [
+                    {
+                        "name": "Golpe R\u00e1pido",
+                        "type": "Fisico",
+                        "cost": 5,
+                        "base_damage": 15,
+                        "multiplier": 1.0,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": null,
+                        "effect": null
+                    },
+                    {
+                        "name": "Chispa M\u00e1gica",
+                        "type": "Magico",
+                        "cost": 10,
+                        "base_damage": 20,
+                        "multiplier": 1.1,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": "Luz",
+                        "effect": null
+                    }
+                ],
+                "level": 2,
+                "xp": 10,
+                "hp": 100.0,
+                "max_hp": 100.0,
+                "sprite_path": "assets/images/characters/Alexander.png",
+                "portrait_path": "assets/images/characters/Alexander.png",
+                "avatar_path": null,
+                "entrance_theme": "assets/sounds/general/Alexander - Tickets.mp3",
+                "hype": 0.0,
+                "equilibrio": 100.0,
+                "estamina": 100,
+                "energia": 100,
+                "status_effects": [
+                    {
+                        "name": "Quemado",
+                        "type": "dot",
+                        "value": 5.0,
+                        "duration": 3,
+                        "stacks": 2,
+                        "element": null
+                    }
+                ],
+                "stat_points": 5,
+                "hospital_fianza": 0,
+                "is_recovering": false,
+                "usage_count": 0,
+                "biography": "Un valiente luchador de la arena.",
+                "elemental_affinity": "Neutral"
+            }
+        ],
+        "inventory": {},
+        "inventory_max": 10,
+        "wins": 0,
+        "losses": 2,
+        "mvp_count": 0,
+        "total_damage_dealt": 200
+    }
+}

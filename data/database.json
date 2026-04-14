@@ -1,0 +1,84 @@
+{
+    "physical_attacks": [
+        {"name": "Golpe Rápido", "cost": 10, "base_damage": 15, "type": "Fisico"},
+        {"name": "Golpe Pesado", "cost": 25, "base_damage": 35, "type": "Fisico"},
+        {"name": "Suplex", "cost": 30, "base_damage": 40, "type": "Fisico"},
+        {"name": "Carga Corporal", "cost": 20, "base_damage": 25, "type": "Fisico"},
+        {"name": "Codazo", "cost": 15, "base_damage": 20, "type": "Fisico"},
+        {"name": "Patada Giratoria", "cost": 22, "base_damage": 30, "type": "Fisico"},
+        {"name": "Gancho al Hígado", "cost": 18, "base_damage": 22, "type": "Fisico"},
+        {"name": "Agarre de Sumisión", "cost": 35, "base_damage": 45, "type": "Fisico"},
+        {"name": "Lanza (Spear)", "cost": 28, "base_damage": 38, "type": "Fisico"},
+        {"name": "Martinete (Pile Driver)", "cost": 45, "base_damage": 60, "type": "Fisico"}
+    ],
+    "magic_elements": [
+        "Fuego", "Hielo", "Rayo", "Tierra", "Aire", "Oscuridad", "Luz", "Agua", "Veneno", "Metal"
+    ],
+    "magic_attacks": {
+        "Fuego": [
+            {"name": "Chispa", "cost": 12, "base_damage": 18, "type": "Magico", "element": "Fuego", "effect": {"name": "Quemado", "type": "dot", "value": 5, "duration": 3}},
+            {"name": "Llama", "cost": 20, "base_damage": 30, "type": "Magico", "element": "Fuego", "effect": {"name": "Quemado", "type": "dot", "value": 10, "duration": 3}},
+            {"name": "Bola de Fuego", "cost": 35, "base_damage": 50, "type": "Magico", "element": "Fuego", "effect": {"name": "Quemado", "type": "dot", "value": 15, "duration": 4}},
+            {"name": "Infierno", "cost": 75, "base_damage": 110, "type": "Magico", "element": "Fuego", "effect": {"name": "Quemado", "type": "dot", "value": 25, "duration": 5}},
+            {"name": "Nova Carmesí", "cost": 120, "base_damage": 180, "type": "Magico", "element": "Fuego", "effect": {"name": "Quemado", "type": "dot", "value": 40, "duration": 3}}
+        ],
+        "Hielo": [
+            {"name": "Escarcha", "cost": 12, "base_damage": 15, "type": "Magico", "element": "Hielo", "effect": {"name": "Congelado", "type": "stun", "value": 0.2, "duration": 1}},
+            {"name": "Lanza de Hielo", "cost": 25, "base_damage": 35, "type": "Magico", "element": "Hielo", "effect": {"name": "Congelado", "type": "stun", "value": 0.3, "duration": 1}},
+            {"name": "Ventisca", "cost": 45, "base_damage": 60, "type": "Magico", "element": "Hielo", "effect": {"name": "Congelado", "type": "stun", "value": 0.4, "duration": 2}},
+            {"name": "Zero Absoluto", "cost": 110, "base_damage": 160, "type": "Magico", "element": "Hielo", "effect": {"name": "Congelado", "type": "stun", "value": 0.8, "duration": 3}}
+        ],
+        "Rayo": [
+            {"name": "Estática", "cost": 10, "base_damage": 10, "type": "Magico", "element": "Rayo", "effect": {"name": "Paralizado", "type": "stun", "value": 0.1, "duration": 1}},
+            {"name": "Relámpago", "cost": 30, "base_damage": 40, "type": "Magico", "element": "Rayo", "effect": {"name": "Paralizado", "type": "stun", "value": 0.3, "duration": 2}},
+            {"name": "Trueno", "cost": 60, "base_damage": 85, "type": "Magico", "element": "Rayo", "effect": {"name": "Paralizado", "type": "stun", "value": 0.5, "duration": 2}},
+            {"name": "Tormenta Electrica", "cost": 90, "base_damage": 130, "type": "Magico", "element": "Rayo", "effect": {"name": "Paralizado", "type": "stun", "value": 0.7, "duration": 3}}
+        ],
+        "Tierra": [
+            {"name": "Escudo de Roca", "cost": 15, "base_damage": 5, "type": "Magico", "element": "Tierra", "effect": {"name": "Escudo Fijo", "type": "buff", "value": 0.3, "duration": 2}},
+            {"name": "Muro de Piedra", "cost": 35, "base_damage": 15, "type": "Magico", "element": "Tierra", "effect": {"name": "Escudo Pesado", "type": "buff", "value": 0.5, "duration": 3}},
+            {"name": "Terremoto", "cost": 70, "base_damage": 90, "type": "Magico", "element": "Tierra", "effect": {"name": "Inestable", "type": "debuff", "value": 5, "duration": 2}}
+        ],
+        "Oscuridad": [
+            {"name": "Drenaje", "cost": 20, "base_damage": 20, "type": "Magico", "element": "Oscuridad", "effect": {"name": "Vampirismo", "type": "lifesteal", "value": 0.3, "duration": 2}},
+            {"name": "Sombra Voraz", "cost": 50, "base_damage": 60, "type": "Magico", "element": "Oscuridad", "effect": {"name": "Vampirismo Mayor", "type": "lifesteal", "value": 0.5, "duration": 3}},
+            {"name": "Agujero Negro", "cost": 100, "base_damage": 150, "type": "Magico", "element": "Oscuridad", "effect": {"name": "Vampirismo Divino", "type": "lifesteal", "value": 0.8, "duration": 3}}
+        ],
+        "Luz": [
+            {"name": "Destello", "cost": 15, "base_damage": 10, "type": "Magico", "element": "Luz", "effect": {"name": "Cegado", "type": "debuff", "value": 0.3, "duration": 2}},
+            {"name": "Curación", "cost": 30, "base_damage": 0, "type": "Magico", "element": "Luz", "effect": {"name": "Regeneración", "type": "regen", "value": 20, "duration": 3}},
+            {"name": "Sentencia", "cost": 80, "base_damage": 100, "type": "Magico", "element": "Luz", "effect": {"name": "Cegado Total", "type": "debuff", "value": 0.6, "duration": 3}}
+        ],
+        "Veneno": [
+            {"name": "Nube Tóxica", "cost": 10, "base_damage": 5, "type": "Magico", "element": "Veneno", "effect": {"name": "Envenenado", "type": "dot", "value": 5, "duration": 10}},
+            {"name": "Picadura", "cost": 25, "base_damage": 25, "type": "Magico", "element": "Veneno", "effect": {"name": "Envenenado", "type": "dot", "value": 10, "duration": 10}},
+            {"name": "Plaga Viral", "cost": 60, "base_damage": 40, "type": "Magico", "element": "Veneno", "effect": {"name": "Envenenado", "type": "dot", "value": 25, "duration": 10}}
+        ],
+        "Metal": [
+            {"name": "Piel de Acero", "cost": 20, "base_damage": 0, "type": "Magico", "element": "Metal", "effect": {"name": "Espinas", "type": "thorns", "value": 0.5, "duration": 3}},
+            {"name": "Impacto Férreo", "cost": 40, "base_damage": 60, "type": "Magico", "element": "Metal", "effect": {"name": "Espinas", "type": "thorns", "value": 0.3, "duration": 2}}
+        ]
+    },
+    "physical_exercises": [
+        {"name": "Flexiones", "stat": "fuerza", "gain": 1, "stamina_cost": 5},
+        {"name": "Sprints", "stat": "velocidad", "gain": 3, "stamina_cost": 18},
+        {"name": "Powerlifting", "stat": "fuerza", "gain": 5, "stamina_cost": 35}
+    ],
+    "magical_trainings": [
+        {"name": "Meditación", "stat": "poder", "gain": 1, "energy_cost": 5},
+        {"name": "Canalización", "stat": "poder", "gain": 1, "energy_cost": 10},
+        {"name": "Ritual Sagrado", "stat": "poder", "gain": 5, "energy_cost": 40}
+    ],
+    "proteins": [
+        {"name": "Suero de Leche", "bonus": {"fuerza": 2}, "duration": 3},
+        {"name": "Creatina Pura", "bonus": {"fuerza": 10}, "duration": 1}
+    ],
+    "energizers": [
+        {"name": "Café Negro", "bonus": {"velocidad": 2}, "duration": 2},
+        {"name": "Complejo B12", "bonus": {"energia": 50}, "duration": 1}
+    ],
+    "team_upgrades": [
+        {"name": "Autocar del Equipo", "effect": "Viaje rápido", "points_cost": 100},
+        {"name": "Jimnasio Pro", "effect": "+10% Ganancia Fuerza", "points_cost": 250}
+    ]
+}
