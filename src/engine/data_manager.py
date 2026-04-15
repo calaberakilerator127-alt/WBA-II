@@ -80,8 +80,8 @@ class DataManager:
     def play_sfx(self, name):
         self.sfx.play(name)
 
-    def play_music(self, path):
-        self.music.play(path)
+    def play_music(self, path, loop=-1):
+        self.music.play(path, loop=loop)
 
     def get_key(self, action: str, player=1) -> int:
         """Returns the bound key integer for a specific action."""
