@@ -165,11 +165,13 @@ def download_and_apply(url: str, new_version: str,
         _progress(0.9)
 
         # Find the root folder inside the zip (may be nested)
-        candidates = [
-            d for d in os.listdir(extract_dir)
-            if os.path.isdir(os.path.join(extract_dir, d))
-        ]
-        src_root = os.path.join(extract_dir, candidates[0]) if candidates else extract_dir
+        # Only go one level deep if there is EXACTLY one directory and NO files at the root
+        contents = os.listdir(extract_dir)
+        dirs = [d for d in contents if os.path.isdir(os.path.join(extract_dir, d))]
+        if len(dirs) == 1 and len(contents) == 1:
+            src_root = os.path.join(extract_dir, dirs[0])
+        else:
+            src_root = extract_dir
 
         _status("INSTALANDO ARCHIVOS...")
         game_root = _game_root()

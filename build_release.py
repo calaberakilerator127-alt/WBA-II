@@ -55,7 +55,7 @@ def main():
         return
 
     print(f"\n[+] Comprimiendo la carpeta en: {zip_name}.zip ...")
-    shutil.make_archive(zip_name, 'zip', os.path.join("dist", "WarBrawlArena2"))
+    shutil.make_archive(zip_name, 'zip', root_dir="dist", base_dir="WarBrawlArena2")
     print("[+] Archivo ZIP creado exitosamente.")
 
     # 5. Abrir GitHub para subir el Release
