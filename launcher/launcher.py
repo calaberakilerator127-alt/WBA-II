@@ -39,6 +39,9 @@ def _version_file():
     return os.path.join(_game_root(), "version.json")
 
 def _game_exe():
+    """Returns the path to the game executable."""
+    if not getattr(sys, 'frozen', False):
+        return None   # dev mode: run via python
     try:
         with open(_version_file(), "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -202,8 +205,15 @@ def download_and_apply(url: str, new_version: str,
 # ── Main ──────────────────────────────────────────────────────
 
 def launch_game():
+    if not getattr(sys, 'frozen', False):
+        # Dev mode: run the game via Python interpreter
+        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        python = sys.executable
+        subprocess.Popen([python, "main.py"], cwd=project_root)
+        return
+    # Production mode
     exe = _game_exe()
-    if os.path.exists(exe):
+    if exe and os.path.exists(exe):
         subprocess.Popen([exe], cwd=os.path.dirname(exe))
     else:
         print(f"[Launcher] No se encontró el ejecutable: {exe}")
