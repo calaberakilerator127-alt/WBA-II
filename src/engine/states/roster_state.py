@@ -58,7 +58,7 @@ class RosterState:
     def select_fighter(self, idx):
         if idx < len(self.roster):
             self.manager.selected_fighter_idx = idx
-            self.manager.change_state("profile")
+            self.manager.push_state("profile")
 
     def update(self, dt, events):
         self._time += dt

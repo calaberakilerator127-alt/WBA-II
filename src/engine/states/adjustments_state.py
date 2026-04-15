@@ -64,19 +64,41 @@ class AdjustmentsState:
             ("STATS/HUD",      "STATS"),
         ]
         self._ctrl_hover = -1
+        self.ctrl_player = 1
+        self.btn_toggle_p = PixelButton(manager, "EDITANDO: JUGADOR 1",
+                                     (cx-80, 45), size=(160, 22),
+                                     callback=self.toggle_ctrl_player,
+                                     variant="info", font_size=8)
 
     # ── Callbacks ─────────────────────────────────────────────────
 
+    def toggle_ctrl_player(self):
+        self.ctrl_player = 2 if self.ctrl_player == 1 else 1
+        self.btn_toggle_p.set_text(f"EDITANDO: JUGADOR {self.ctrl_player}")
+        self.binding_action = None
+
     def reset_controls(self):
-        if not self.acc:
-            self.feedback.show("INICIA SESIÓN PRIMERO", kind="error")
+        acc = self.manager.data_manager.active_p1 if self.ctrl_player == 1 else self.manager.data_manager.active_p2
+        if not acc:
+            self.feedback.show(f"INICIA SESIÓN P{self.ctrl_player} PRIMERO", kind="error")
             return
-        self.acc.key_bindings = {
-            "UP": 1073741906, "DOWN": 1073741905,
-            "LEFT": 1073741904, "RIGHT": 1073741903,
-            "CONFIRM": 13, "BACK": 27, "TRAIN": 32, "STATS": 9
-        }
-        self.manager.data_manager.save_account(self.acc)
+        
+        if self.ctrl_player == 1:
+            acc.key_bindings = {
+                "UP": 1073741906, "DOWN": 1073741905,
+                "LEFT": 1073741904, "RIGHT": 1073741903,
+                "CONFIRM": 13, "BACK": 27, "TRAIN": 32, "STATS": 9
+            }
+        else:
+            acc.key_bindings = {
+                "UP": 119, "DOWN": 115, "LEFT": 97, "RIGHT": 100,
+                "CONFIRM": 1073742049, "BACK": 122, "TRAIN": 120, "STATS": 99
+            }
+
+        if self.ctrl_player == 1:
+            self.manager.data_manager.save_account(acc)
+        else:
+            self.manager.data_manager.save_active_account(is_p1=False)
         self.feedback.show("CONTROLES RESTAURADOS", kind="success")
 
     def switch_tab(self, tab):
@@ -119,9 +141,10 @@ class AdjustmentsState:
         self._time += dt
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if self.binding_action and self.acc:
-                    self.acc.key_bindings[self.binding_action] = event.key
-                    self.manager.data_manager.save_account(self.acc)
+                acc = self.manager.data_manager.active_p1 if self.ctrl_player == 1 else self.manager.data_manager.active_p2
+                if self.binding_action and acc:
+                    acc.key_bindings[self.binding_action] = event.key
+                    self.manager.data_manager.save_active_account(is_p1=(self.ctrl_player == 1))
                     self.binding_action = None
                     self.manager.data_manager.play_sfx("stat")
                     self.feedback.show("TECLA ASIGNADA", kind="success")
@@ -137,6 +160,7 @@ class AdjustmentsState:
                 self.btn_ctrl.handle_event(event)
             else:
                 self.btn_reset.handle_event(event)
+                self.btn_toggle_p.handle_event(event)
                 # Detect hover for control rows
                 if event.type == pygame.MOUSEMOTION:
                     mx, my = event.pos
@@ -146,8 +170,9 @@ class AdjustmentsState:
                         if pygame.Rect(24, row_y-1, styles.BASE_WIDTH-48, 20).collidepoint(mx, my):
                             self._ctrl_hover = i
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    if not self.acc:
-                        self.feedback.show("INICIA SESIÓN PARA CAMBIAR CONTROLES", kind="error")
+                    acc = self.manager.data_manager.active_p1 if self.ctrl_player == 1 else self.manager.data_manager.active_p2
+                    if not acc:
+                        self.feedback.show(f"INICIA SESIÓN P{self.ctrl_player} PARA EDITAR", kind="error")
                     else:
                         mx, my = event.pos
                         for i, (label, action) in enumerate(self.control_items):
@@ -166,6 +191,7 @@ class AdjustmentsState:
             self.btn_ctrl.update(dt)
         else:
             self.btn_reset.update(dt)
+            self.btn_toggle_p.update(dt)
         self.btn_back.update(dt)
         self.feedback.update(dt)
 
@@ -220,12 +246,18 @@ class AdjustmentsState:
         cx       = styles.BASE_WIDTH // 2
         hf       = styles.font_hint()
         sec_font = styles.font_caption(bold=True)
-        defaults = {
-            "UP": 1073741906, "DOWN": 1073741905,
-            "LEFT": 1073741904, "RIGHT": 1073741903,
+        defaults_p1 = {
+            "UP": 1073741906, "DOWN": 1073741905, "LEFT": 1073741904, "RIGHT": 1073741903,
             "CONFIRM": 13, "BACK": 27, "TRAIN": 32, "STATS": 9
         }
-        kb = self.acc.key_bindings if self.acc else defaults
+        defaults_p2 = {
+            "UP": 119, "DOWN": 115, "LEFT": 97, "RIGHT": 100,
+            "CONFIRM": 1073742049, "BACK": 122, "TRAIN": 120, "STATS": 99
+        }
+        acc = self.manager.data_manager.active_p1 if self.ctrl_player == 1 else self.manager.data_manager.active_p2
+        kb = acc.key_bindings if acc else (defaults_p1 if self.ctrl_player == 1 else defaults_p2)
+
+        self.btn_toggle_p.draw(screen)
 
         # Column headers
         screen.blit(sec_font.render("ACCIÓN",    True, styles.COLOR_MUTED), (30, 64))

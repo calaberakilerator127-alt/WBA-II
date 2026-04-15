@@ -1,5 +1,15 @@
 import pygame
 import math
+import sys
+import os
+
+def resource_path(relative_path):
+    """Resolves a resource path for both dev mode and PyInstaller frozen exe."""
+    if getattr(sys, 'frozen', False):
+        base = sys._MEIPASS
+    else:
+        base = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    return os.path.join(base, relative_path)
 
 # ============================================================
 # WAR BRAWL ARENA II — UNIFIED DESIGN SYSTEM
@@ -98,20 +108,20 @@ PANEL_RADIUS  = 3    # Border radius for panels / buttons
 
 ASSET_PATHS = {
     "sfx": {
-        "hover": "assets/sounds/sfx/hover.wav",
-        "click": "assets/sounds/sfx/click.wav",
-        "stat":  "assets/sounds/sfx/cash.wav"
+        "hover": resource_path("assets/sounds/sfx/hover.wav"),
+        "click": resource_path("assets/sounds/sfx/click.wav"),
+        "stat":  resource_path("assets/sounds/sfx/cash.wav")
     },
     "music": {
-        "login":  "assets/sounds/general/War Brawl Arena - Login.mp3",
-        "hub":    "assets/sounds/general/Calmnessy - Hub.mp3",
-        "gym":    "assets/sounds/general/Venisius - Training.mp3",
-        "hosp":   "assets/sounds/general/loneliness - Hospital.mp3",
-        "lab":    "assets/sounds/general/Sombrio - Shop.mp3",
-        "battle": "assets/sounds/general/Stronger - Battle.mp3"
+        "login":  resource_path("assets/sounds/general/War Brawl Arena - Login.mp3"),
+        "hub":    resource_path("assets/sounds/general/Calmnessy - Hub.mp3"),
+        "gym":    resource_path("assets/sounds/general/Venisius - Training.mp3"),
+        "hosp":   resource_path("assets/sounds/general/loneliness - Hospital.mp3"),
+        "lab":    resource_path("assets/sounds/general/Sombrio - Shop.mp3"),
+        "battle": resource_path("assets/sounds/general/Stronger - Battle.mp3")
     },
     "images": {
-        "presenter": "assets/images/others/Presentador.png"
+        "presenter": resource_path("assets/images/others/Presentador.png")
     }
 }
 

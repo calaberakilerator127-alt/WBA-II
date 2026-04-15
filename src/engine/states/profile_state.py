@@ -71,7 +71,10 @@ class ProfileState:
             self.feedback.show("SIN PUNTOS DISPONIBLES", kind="error")
 
     def go_back(self):
-        self.manager.change_state("roster")
+        if self.manager.state_stack:
+            self.manager.pop_state()
+        else:
+            self.manager.change_state("menu")
 
     def update(self, dt, events):
         self._time += dt

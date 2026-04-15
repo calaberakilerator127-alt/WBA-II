@@ -3,6 +3,7 @@ import math
 from src.graphics import styles
 from src.graphics.ui_system import PixelButton, NavBar
 from src.utils.localization import lang
+from src.engine.states.pause_state import QuitOverlay
 
 class MenuState:
     """
@@ -31,9 +32,17 @@ class MenuState:
         ]
 
         # ── Exit ─────────────────────────────────────────────────
-        self.btn_exit = PixelButton(manager, "SALIR AL ESCRITORIO", (bx, 190),
+        self.btn_logout_all = PixelButton(manager, "CERRAR TODAS", (bx, 190),
+                                    size=(bw, 20), callback=self._logout_all,
+                                    variant="danger", font_size=8)
+        self.btn_exit = PixelButton(manager, "SALIR AL ESCRITORIO", (bx, 214),
                                     size=(bw, 20), callback=self._quit,
                                     variant="ghost", font_size=8)
+
+        # ── Account Management ───────────────────────────────────
+        self.btn_logout_p1 = PixelButton(manager, "X", (152, 62), size=(22, 22), callback=self._logout_p1, variant="danger", font_size=10, tooltip_text="Cerrar sesión Jugador 1")
+        self.btn_logout_p2 = PixelButton(manager, "X", (styles.BASE_WIDTH - 176, 62), size=(22, 22), callback=self._logout_p2, variant="danger", font_size=10, tooltip_text="Cerrar sesión Jugador 2")
+        self.btn_swap      = PixelButton(manager, "CAMBIAR", (94, 86), size=(80, 22), callback=self._swap_accounts, variant="info", font_size=10, tooltip_text="Intercambiar controles y estado de P1 con P2")
 
         # ── Navigation bar at bottom ──────────────────────────────
         self.nav_bar = NavBar(manager, current_state="menu")
@@ -43,23 +52,68 @@ class MenuState:
         self.manager.change_state("mode_config")
 
     def _quit(self):
-        pygame.event.post(pygame.event.Event(pygame.QUIT))
+        self.manager.overlay = QuitOverlay(self.manager)
+
+    def _logout_all(self):
+        self.manager.data_manager.active_p1 = None
+        self.manager.data_manager.active_p2 = None
+        self.manager.target_player = 1
+        self.manager.change_state("login")
+
+    def _logout_p1(self):
+        if self.manager.data_manager.active_p2:
+            self.manager.data_manager.active_p1 = self.manager.data_manager.active_p2
+            self.manager.data_manager.active_p2 = None
+            try:
+                self.manager.data_manager.play_sfx("click")
+            except: pass
+        else:
+            self._logout_all()
+
+    def _logout_p2(self):
+        self.manager.data_manager.active_p2 = None
+        try:
+            self.manager.data_manager.play_sfx("click")
+        except: pass
+
+    def _swap_accounts(self):
+        p1 = self.manager.data_manager.active_p1
+        p2 = self.manager.data_manager.active_p2
+        if p1 and p2:
+            self.manager.data_manager.active_p1 = p2
+            self.manager.data_manager.active_p2 = p1
+            try:
+                self.manager.data_manager.play_sfx("stat")
+            except: pass
 
     def update(self, dt, events):
         self._time += dt
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == self.manager.data_manager.get_key("BACK"):
-                    self.manager.change_state("login")
+                    self._quit()
             for btn in self.btn_actions:
                 btn.handle_event(event)
+
+            self.btn_logout_all.handle_event(event)
             self.btn_exit.handle_event(event)
             self.nav_bar.handle_event(event)
+            
+            if self.manager.data_manager.active_p1:
+                self.btn_logout_p1.handle_event(event)
+            if self.manager.data_manager.active_p2:
+                self.btn_logout_p2.handle_event(event)
+                self.btn_swap.handle_event(event)
 
         for btn in self.btn_actions:
             btn.update(dt)
+        self.btn_logout_all.update(dt)
         self.btn_exit.update(dt)
         self.nav_bar.update(dt)
+        
+        self.btn_logout_p1.update(dt)
+        self.btn_logout_p2.update(dt)
+        self.btn_swap.update(dt)
 
     def draw(self, screen):
         # ── Background ──────────────────────────────────────────
@@ -126,30 +180,44 @@ class MenuState:
         # Tip below buttons
         tip = styles.font_hint().render("← NAV  •  USAR BARRA INFERIOR PARA NAVEGAR →",
                                          True, styles.COLOR_DISABLED)
-        screen.blit(tip, (styles.BASE_WIDTH//2 - tip.get_width()//2, 178))
+        screen.blit(tip, (styles.BASE_WIDTH//2 - tip.get_width()//2, 238))
 
+        self.btn_logout_all.draw(screen)
         self.btn_exit.draw(screen)
 
-        # ── Account Info Card ────────────────────────────────────
         acc = self.manager.data_manager.active_p1
-        if acc:
-            card_rect = pygame.Rect(8, 62, 140, 22)
+        p2_acc = self.manager.data_manager.active_p2
+        
+        def render_acc_card(account, is_p1):
+            cx = 8 if is_p1 else styles.BASE_WIDTH - 148
+            brawels_x = 8 if is_p1 else styles.BASE_WIDTH - 90
+
+            card_rect = pygame.Rect(cx, 62, 140, 22)
             styles.draw_panel(screen, card_rect,
                               bg_color=styles.COLOR_PANEL_BG,
                               border_color=styles.COLOR_BORDER)
             acc_font = styles.font_hint()
-            wr = (acc.wins / (acc.wins + acc.losses) * 100) if (acc.wins + acc.losses) > 0 else 0.0
+            
             info = acc_font.render(
-                f"▸ {acc.username.upper()[:12]}  {acc.wins}W/{acc.losses}L",
+                f"▸ {account.username.upper()[:12]}  {account.wins}W/{account.losses}L",
                 True, styles.COLOR_ACCENT)
-            screen.blit(info, (12, 67))
+            screen.blit(info, (cx + 4, 67))
 
-            brawels_rect = pygame.Rect(styles.BASE_WIDTH - 90, 62, 82, 22)
+            brawels_rect = pygame.Rect(brawels_x, 88, 82, 22)
             styles.draw_panel(screen, brawels_rect,
                               bg_color=styles.COLOR_PANEL_BG,
                               border_color=styles.COLOR_BORDER)
-            bwf = acc_font.render(f"💰 {acc.brawels}B", True, styles.COLOR_SECONDARY)
-            screen.blit(bwf, (styles.BASE_WIDTH - 86, 67))
+            bwf = acc_font.render(f"💰 {account.brawels}B", True, styles.COLOR_SECONDARY)
+            screen.blit(bwf, (brawels_x + 4, 93))
+            
+        if acc:
+            render_acc_card(acc, True)
+            self.btn_logout_p1.draw(screen)
+            
+        if p2_acc:
+            render_acc_card(p2_acc, False)
+            self.btn_logout_p2.draw(screen)
+            self.btn_swap.draw(screen)
 
         # ── Nav Bar ─────────────────────────────────────────────
         self.nav_bar.draw(screen)

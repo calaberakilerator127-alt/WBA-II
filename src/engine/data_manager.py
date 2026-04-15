@@ -1,8 +1,21 @@
 import pygame
 import os
+import sys
 import json
 from typing import List, Dict, Optional
 from src.engine.data_models import Account, FighterProfile
+
+def _resource(relative_path):
+    """Resolves read-only asset paths inside the PyInstaller bundle."""
+    if getattr(sys, 'frozen', False):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return relative_path
+
+def _save_dir():
+    """Returns the directory for persistent save data (next to the .exe in prod)."""
+    if getattr(sys, 'frozen', False):
+        return os.path.join(os.path.dirname(sys.executable), 'data')
+    return 'data'
 
 class SoundManager:
     """Manages preloading and playing of game SFX."""
@@ -14,9 +27,10 @@ class SoundManager:
         sfx_map = {
             "hover": "assets/sounds/sfx/hover.wav",
             "click": "assets/sounds/sfx/click.wav",
-            "stat": "assets/sounds/sfx/cash.wav"
+            "stat":  "assets/sounds/sfx/cash.wav"
         }
-        for name, path in sfx_map.items():
+        for name, rel_path in sfx_map.items():
+            path = _resource(rel_path)
             if os.path.exists(path):
                 self.sounds[name] = pygame.mixer.Sound(path)
 
@@ -48,7 +62,9 @@ class MusicManager:
 
 class DataManager:
     """Handles JSON persistence for accounts and game data."""
-    def __init__(self, data_dir="data"):
+    def __init__(self, data_dir=None):
+        if data_dir is None:
+            data_dir = _save_dir()
         self.data_dir = data_dir
         self.accounts_file = os.path.join(data_dir, "accounts.json")
         self.fighters_file = os.path.join(data_dir, "fighters_db.json")

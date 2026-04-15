@@ -88,3 +88,48 @@ class PauseState:
         # ── Buttons ──────────────────────────────────────────────
         for btn in self.buttons:
             btn.draw(screen)
+
+
+class QuitOverlay:
+    """Prompt for quitting the game."""
+    def __init__(self, manager):
+        self.manager = manager
+        self._alpha = 0.0
+        cx, cy = styles.BASE_WIDTH // 2, styles.BASE_HEIGHT // 2
+        self.btn_no  = PixelButton(manager, "VOLVER", (cx - 75, cy + 12), size=(70, 24), callback=self.cancel, variant="ghost")
+        self.btn_yes = PixelButton(manager, "SÍ, SALIR", (cx + 5, cy + 12), size=(70, 24), callback=self.quit_game, variant="danger")
+        
+    def quit_game(self):
+        pygame.event.post(pygame.event.Event(pygame.QUIT))
+        
+    def cancel(self):
+        self.manager.overlay = None
+
+    def update(self, dt, events):
+        self._alpha = min(1.0, self._alpha + 5.0 * dt)
+        for event in events:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                self.cancel()
+            self.btn_yes.handle_event(event)
+            self.btn_no.handle_event(event)
+        self.btn_yes.update(dt)
+        self.btn_no.update(dt)
+
+    def draw(self, screen):
+        overlay = pygame.Surface((styles.BASE_WIDTH, styles.BASE_HEIGHT), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, int(180 * self._alpha)))
+        screen.blit(overlay, (0, 0))
+        
+        panel_w, panel_h = 220, 110
+        cx, cy = styles.BASE_WIDTH // 2, styles.BASE_HEIGHT // 2
+        panel_rect = pygame.Rect(cx - panel_w//2, cy - panel_h//2, panel_w, panel_h)
+        styles.draw_panel(screen, panel_rect, bg_color=styles.COLOR_PANEL_BG2, border_color=styles.COLOR_ERROR)
+        
+        font = styles.font_body(bold=True)
+        txt1 = font.render("¿SALIR AL ESCRITORIO?", True, styles.COLOR_WHITE)
+        txt2 = styles.font_hint().render("PROGRESO AUTOGUARDADO", True, styles.COLOR_SUCCESS)
+        screen.blit(txt1, (cx - txt1.get_width()//2, panel_rect.y + 15))
+        screen.blit(txt2, (cx - txt2.get_width()//2, panel_rect.y + 35))
+        
+        self.btn_yes.draw(screen)
+        self.btn_no.draw(screen)

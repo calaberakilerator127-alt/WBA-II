@@ -127,9 +127,9 @@
         "password": "aa",
         "avatar_path": "assets/images/profile/masculino/Amsterdam.png",
         "settings": {
-            "master_vol": 0.5,
-            "music_vol": 0.13,
-            "sfx_vol": 0.59,
+            "master_vol": 0.505,
+            "music_vol": 0.5,
+            "sfx_vol": 0.5,
             "fullscreen": 0.0
         },
         "key_bindings": {
@@ -142,7 +142,7 @@
             "TRAIN": 32,
             "STATS": 9
         },
-        "brawels": 218,
+        "brawels": 388,
         "puntos": 0,
         "fighters": [
             {
@@ -151,7 +151,7 @@
                 "stats": {
                     "fuerza": 69,
                     "poder": 36,
-                    "velocidad": 21,
+                    "velocidad": 28,
                     "resistencia_fisica": 5,
                     "resistencias_elementales": {},
                     "estamina_max": 100,
@@ -248,7 +248,7 @@
                     }
                 ],
                 "level": 8,
-                "xp": 220,
+                "xp": 320,
                 "hp": 100.0,
                 "max_hp": 100.0,
                 "sprite_path": "assets/images/characters/Angelica.png",
@@ -257,10 +257,10 @@
                 "entrance_theme": null,
                 "hype": 0.0,
                 "equilibrio": 100.0,
-                "estamina": 55,
-                "energia": 36,
+                "estamina": 95,
+                "energia": 100,
                 "status_effects": [],
-                "stat_points": 7,
+                "stat_points": 0,
                 "hospital_fianza": 0,
                 "is_recovering": false,
                 "usage_count": 0,
@@ -273,10 +273,10 @@
             "Autocar del Equipo": 2
         },
         "inventory_max": 10,
-        "wins": 8,
+        "wins": 10,
         "losses": 0,
         "mvp_count": 0,
-        "total_damage_dealt": 700
+        "total_damage_dealt": 900
     },
     "TesterPro": {
         "username": "TesterPro",
@@ -375,16 +375,16 @@
             "TRAIN": 32,
             "STATS": 9
         },
-        "brawels": 110,
+        "brawels": 25,
         "puntos": 0,
         "fighters": [
             {
                 "id": "ff9d18d3",
                 "name": "Alexander",
                 "stats": {
-                    "fuerza": 10,
-                    "poder": 10,
-                    "velocidad": 10,
+                    "fuerza": 21,
+                    "poder": 12,
+                    "velocidad": 15,
                     "resistencia_fisica": 5,
                     "resistencias_elementales": {},
                     "estamina_max": 100,
@@ -413,10 +413,28 @@
                         "penetration": 0.0,
                         "element": "Luz",
                         "effect": null
+                    },
+                    {
+                        "name": "Llama",
+                        "type": "Magico",
+                        "cost": 20,
+                        "base_damage": 30,
+                        "multiplier": 1.0,
+                        "recoil": 0.0,
+                        "penetration": 0.0,
+                        "element": "Fuego",
+                        "effect": {
+                            "name": "Quemado",
+                            "type": "dot",
+                            "value": 10.0,
+                            "duration": 3,
+                            "stacks": 1,
+                            "element": null
+                        }
                     }
                 ],
                 "level": 2,
-                "xp": 10,
+                "xp": 70,
                 "hp": 100.0,
                 "max_hp": 100.0,
                 "sprite_path": "assets/images/characters/Alexander.png",
@@ -425,19 +443,10 @@
                 "entrance_theme": "assets/sounds/general/Alexander - Tickets.mp3",
                 "hype": 0.0,
                 "equilibrio": 100.0,
-                "estamina": 100,
+                "estamina": 15.090500000000006,
                 "energia": 100,
-                "status_effects": [
-                    {
-                        "name": "Quemado",
-                        "type": "dot",
-                        "value": 5.0,
-                        "duration": 3,
-                        "stacks": 2,
-                        "element": null
-                    }
-                ],
-                "stat_points": 5,
+                "status_effects": [],
+                "stat_points": 0,
                 "hospital_fianza": 0,
                 "is_recovering": false,
                 "usage_count": 0,
@@ -448,8 +457,8 @@
         "inventory": {},
         "inventory_max": 10,
         "wins": 0,
-        "losses": 2,
+        "losses": 3,
         "mvp_count": 0,
-        "total_damage_dealt": 200
+        "total_damage_dealt": 250
     }
 }

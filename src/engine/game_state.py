@@ -142,8 +142,8 @@ class StateManager:
         # Passive Regen
         self.data_manager.update_regen(dt)
 
-        # Global Pause Trigger (If not on login/register)
-        if self.current_state_name not in ["login", "register"]:
+        # Global Pause Trigger
+        if self.current_state_name in ["battle"]:
             for event in events:
                 if event.type == pygame.KEYDOWN:
                     if event.key == self.data_manager.get_key("BACK"):

@@ -685,6 +685,7 @@ class NavBar(UIElement):
                     if state == "settings":
                         self.manager.push_state("settings")
                     else:
+                        self.manager.state_stack.clear()
                         self.manager.change_state(state)
 
     def update(self, dt):

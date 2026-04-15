@@ -1,6 +1,17 @@
 import sys
+import os
 import pygame
 from src.engine.game_state import StateManager
+
+# ── Portable path fix (PyInstaller .exe support) ─────────────────────────────
+# When running as a frozen exe, sys._MEIPASS points to the extracted bundle
+# (read-only assets). We add it to sys.path so imports work, but keep cwd
+# pointing to the folder NEXT TO the .exe so data/ saves are persistent.
+if getattr(sys, 'frozen', False):
+    bundle_dir = sys._MEIPASS
+    exe_dir    = os.path.dirname(sys.executable)
+    sys.path.insert(0, bundle_dir)
+    os.chdir(exe_dir)          # saves go next to the .exe, not in temp
 from src.graphics import styles
 
 # Configuration

@@ -53,22 +53,31 @@ class BattleState:
         self.prediction = PredictionHUD(manager)
 
         # Turn management
-        self.is_player_turn = False
+        self.turn_owner     = 1
         self.combat_log     = ["¡COMBATE INICIADO!"]
         self.turn_mode      = "ACTION_SELECT"
         self.stats_visible  = False
 
-        self.menu_moves = None
-        self.update_active_fighters()
+        self.menu_moves_p1 = None
+        self.menu_moves_p2 = None
 
         # Command menus
         self.root_options = ["⚔  LUCHAR", "🛡  DEFENDER", "🎒  MOCHILA", "🚪 HUIR"]
-        self.menu_root = CommandMenu(
+        self.menu_root_p1 = CommandMenu(
             manager,
             (18, styles.BASE_HEIGHT - 82),
             {opt: opt for opt in self.root_options},
-            self.on_root_select
+            lambda c: self.on_root_select(c, 1),
+            player_id=1
         )
+        self.menu_root_p2 = CommandMenu(
+            manager,
+            (styles.BASE_WIDTH - 166, styles.BASE_HEIGHT - 82),
+            {opt: opt for opt in self.root_options},
+            lambda c: self.on_root_select(c, 2),
+            player_id=2
+        )
+        self.update_active_fighters()
         self.check_turn()
 
     # ── Fighter Management ────────────────────────────────────────
@@ -82,71 +91,97 @@ class BattleState:
         self.f1 = Fighter(p1, (95, 130), is_player_1=True)
         self.f2 = Fighter(p2, (380, 130), is_player_1=False)
 
-        # Build move menu with type tags
-        moves_dict = {}
+        # Build move menu with type tags for P1
+        moves_dict_p1 = {}
         for m in p1.moves:
             tag          = "[F]" if m.type == "Fisico" else "[M]"
             display_name = f"{tag} {m.name}"
-            moves_dict[display_name] = m
+            moves_dict_p1[display_name] = m
 
-        self.menu_moves = CommandMenu(
+        self.menu_moves_p1 = CommandMenu(
             self.manager,
             (18, styles.BASE_HEIGHT - 82),
-            moves_dict,
-            self.p1_select_move
+            moves_dict_p1,
+            lambda c: self.select_move(c, 1),
+            player_id=1
+        )
+
+        moves_dict_p2 = {}
+        for m in p2.moves:
+            tag          = "[F]" if m.type == "Fisico" else "[M]"
+            display_name = f"{tag} {m.name}"
+            moves_dict_p2[display_name] = m
+
+        self.menu_moves_p2 = CommandMenu(
+            self.manager,
+            (styles.BASE_WIDTH - 166, styles.BASE_HEIGHT - 82),
+            moves_dict_p2,
+            lambda c: self.select_move(c, 2),
+            player_id=2
         )
 
     # ── Turn Logic ────────────────────────────────────────────────
 
     def check_turn(self):
         if not self.active: return
-        if self.f1.profile.stats.velocidad >= self.f2.profile.stats.velocidad:
-            self.is_player_turn      = True
-            self.menu_root.is_active = True
-        else:
-            self.is_player_turn      = False
-            self.menu_root.is_active = False
-            pygame.time.set_timer(pygame.USEREVENT + 1, 1500)
+        self.menu_root_p1.is_active = False
+        self.menu_root_p2.is_active = False
+        if self.menu_moves_p1: self.menu_moves_p1.is_active = False
+        if self.menu_moves_p2: self.menu_moves_p2.is_active = False
 
-    def on_root_select(self, choice):
-        if not self.active: return
+        if self.f1.profile.stats.velocidad >= self.f2.profile.stats.velocidad:
+            self.turn_owner      = 1
+            self.menu_root_p1.is_active = True
+        else:
+            self.turn_owner      = 2
+            self.menu_root_p2.is_active = True
+        self.turn_mode = "ACTION_SELECT"
+
+    def on_root_select(self, choice, player_id):
+        if not self.active or self.turn_owner != player_id: return
         clean = choice.strip().lstrip("⚔🛡🎒🚪 ")
+        active_menu_moves = self.menu_moves_p1 if player_id == 1 else self.menu_moves_p2
+        active_menu_root  = self.menu_root_p1 if player_id == 1 else self.menu_root_p2
+
         if "LUCHAR" in clean:
-            if self.menu_moves and self.menu_moves.options:
-                self.turn_mode           = "MOVE_SELECT"
-                self.menu_root.is_active = False
-                self.menu_moves.is_active= True
+            if active_menu_moves and active_menu_moves.options:
+                self.turn_mode             = "MOVE_SELECT"
+                active_menu_root.is_active = False
+                active_menu_moves.is_active= True
             else:
                 self.combat_log.append("SIN MOVIMIENTOS DISPONIBLES")
         elif "DEFENDER" in clean:
-            self.execute_defense()
+            self.execute_defense(player_id)
         elif "MOCHILA" in clean:
             self.combat_log.append("MOCHILA VACÍA (PRÓXIMAMENTE)")
         elif "HUIR" in clean:
             self.active = False
             self.manager.change_state("menu")
 
-    def execute_defense(self):
-        self.engine.process_defend(self.f1.profile)
-        self.combat_log.append(f"▶ {self.f1.profile.name} se DEFIENDE")
+    def execute_defense(self, player_id):
+        f = self.f1 if player_id == 1 else self.f2
+        self.engine.process_defend(f.profile)
+        self.combat_log.append(f"▶ {f.profile.name} se DEFIENDE")
         self.end_turn()
 
-    def p1_select_move(self, display_name):
-        if not self.active: return
-        # Strip type tag prefix
+    def select_move(self, display_name, player_id):
+        if not self.active or self.turn_owner != player_id: return
+        f_atk = self.f1 if player_id == 1 else self.f2
+        f_def = self.f2 if player_id == 1 else self.f1
         move_name = display_name[4:] if display_name.startswith("[") else display_name
-        move = next((m for m in self.f1.profile.moves if m.name == move_name), None)
+        move = next((m for m in f_atk.profile.moves if m.name == move_name), None)
         if move:
-            res = self.engine.process_move(self.f1.profile, self.f2.profile, move)
+            res = self.engine.process_move(f_atk.profile, f_def.profile, move)
             dmg = res.get("damage", 0)
-            self.combat_log.append(f"▶ {self.f1.profile.name} usa {move.name}  [{dmg} DMG]")
+            self.combat_log.append(f"▶ {f_atk.profile.name} usa {move.name}  [{dmg} DMG]")
             self.end_turn()
 
     def end_turn(self):
         if not self.active: return
-        self.menu_root.is_active  = False
-        if self.menu_moves:
-            self.menu_moves.is_active = False
+        self.menu_root_p1.is_active = False
+        self.menu_root_p2.is_active = False
+        if self.menu_moves_p1: self.menu_moves_p1.is_active = False
+        if self.menu_moves_p2: self.menu_moves_p2.is_active = False
         self.turn_mode = "ANIMATING"
 
         if self.f2.profile.hp <= 0:
@@ -154,13 +189,13 @@ class BattleState:
         elif self.f1.profile.hp <= 0:
             self.handle_defeat(side=1)
         else:
-            if self.is_player_turn:
-                self.is_player_turn = False
-                pygame.time.set_timer(pygame.USEREVENT + 1, 1000)
+            if self.turn_owner == 1:
+                self.turn_owner = 2
+                self.menu_root_p2.is_active = True
             else:
-                self.is_player_turn      = True
-                self.menu_root.is_active = True
-                self.turn_mode           = "ACTION_SELECT"
+                self.turn_owner = 1
+                self.menu_root_p1.is_active = True
+            self.turn_mode = "ACTION_SELECT"
 
     def handle_defeat(self, side):
         if not self.active: return
@@ -234,16 +269,6 @@ class BattleState:
                     if self.manager.data_manager.add_xp(acc, fp, xp_gain):
                         self.combat_log.append(f"✦ ¡{fp.name} subió al Nivel {fp.level}!")
 
-    def ai_turn(self):
-        if not self.active or self.turn_mode in ("WIN", "LOSE"): return
-        move = random.choice(self.f2.profile.moves)
-        res  = self.engine.process_move(self.f2.profile, self.f1.profile, move)
-        dmg  = res.get("damage", 0)
-        self.combat_log.append(f"▶ Rival usa {move.name}  [{dmg} DMG]")
-        self.end_turn()
-
-    # ── Update ────────────────────────────────────────────────────
-
     def update(self, dt, events):
         self._time += dt
         self._result_flash = max(0.0, self._result_flash - 300.0 * dt)
@@ -252,32 +277,47 @@ class BattleState:
         for event in events:
             if event.type == pygame.USEREVENT + 1:
                 pygame.time.set_timer(pygame.USEREVENT + 1, 0)
-                self.ai_turn()
             elif event.type == pygame.USEREVENT + 2:
                 pygame.time.set_timer(pygame.USEREVENT + 2, 0)
                 self.next_round_logic()
 
             if event.type == pygame.KEYDOWN:
                 d = self.manager.data_manager
-                if event.key == d.get_key("STATS"):
+                if event.key == d.get_key("STATS", player=1) or event.key == d.get_key("STATS", player=2):
                     self.stats_visible = not self.stats_visible
-                elif event.key == d.get_key("BACK") and self.turn_mode == "MOVE_SELECT":
-                    self.turn_mode            = "ACTION_SELECT"
-                    self.menu_moves.is_active = False
-                    self.menu_root.is_active  = True
+                
+                # Back logic for either player
+                if self.turn_mode == "MOVE_SELECT":
+                    if self.turn_owner == 1 and event.key == d.get_key("BACK", player=1):
+                        self.turn_mode            = "ACTION_SELECT"
+                        self.menu_moves_p1.is_active = False
+                        self.menu_root_p1.is_active  = True
+                    elif self.turn_owner == 2 and event.key == d.get_key("BACK", player=2):
+                        self.turn_mode            = "ACTION_SELECT"
+                        self.menu_moves_p2.is_active = False
+                        self.menu_root_p2.is_active  = True
+                        
                 elif self.turn_mode in ("WIN", "LOSE"):
                     self.manager.change_state("menu")
 
             if self.turn_mode == "MOVE_SELECT":
-                self.menu_moves.handle_event(event)
+                if self.turn_owner == 1 and self.menu_moves_p1:
+                    self.menu_moves_p1.handle_event(event)
+                elif self.turn_owner == 2 and self.menu_moves_p2:
+                    self.menu_moves_p2.handle_event(event)
             elif self.turn_mode == "ACTION_SELECT":
-                self.menu_root.handle_event(event)
+                if self.turn_owner == 1:
+                    self.menu_root_p1.handle_event(event)
+                else:
+                    self.menu_root_p2.handle_event(event)
+                    
             if self.turn_mode in ("WIN", "LOSE") and event.type == pygame.KEYDOWN:
                 self.manager.change_state("menu")
 
-        self.menu_root.update(dt)
-        if self.menu_moves:
-            self.menu_moves.update(dt)
+        self.menu_root_p1.update(dt)
+        self.menu_root_p2.update(dt)
+        if self.menu_moves_p1: self.menu_moves_p1.update(dt)
+        if self.menu_moves_p2: self.menu_moves_p2.update(dt)
         self.prediction.update(dt)
 
     # ── Draw ─────────────────────────────────────────────────────
@@ -301,11 +341,11 @@ class BattleState:
         if self.turn_mode in ("WIN", "LOSE"):
             self._draw_result_screen(screen)
 
-        # Key hint
+        # Key hint (Use P1 stats key text but generalized)
         key_name = pygame.key.name(
-            self.manager.data_manager.get_key("STATS")).upper()
+            self.manager.data_manager.get_key("STATS", player=1)).upper()
         hint = styles.font_hint().render(
-            f"[{key_name}] STATS  •  ESC VOLVER", True, styles.COLOR_DISABLED)
+            f"[{key_name}] STATS", True, styles.COLOR_DISABLED)
         screen.blit(hint, (styles.BASE_WIDTH - hint.get_width() - 4,
                             styles.BASE_HEIGHT - 10))
 
@@ -385,25 +425,34 @@ class BattleState:
 
         # Turn indicator
         if not self.active: return
-        turn_txt = "TU TURNO" if self.is_player_turn else "TURNO RIVAL..."
-        turn_col = styles.COLOR_SUCCESS if self.is_player_turn else styles.COLOR_WARNING
+        turn_txt = f"TURNO P{self.turn_owner}"
+        turn_col = styles.COLOR_SUCCESS if self.turn_owner == 1 else styles.COLOR_PRIMARY
         ts       = styles.font_hint().render(turn_txt, True, turn_col)
-        screen.blit(ts, (log_rect.right - ts.get_width() - 4,
-                          log_rect.bottom - ts.get_height() - 3))
+        
+        # Position dynamically based on who's turn it is
+        tx = log_rect.left + 4 if self.turn_owner == 1 else log_rect.right - ts.get_width() - 4
+        screen.blit(ts, (tx, log_rect.bottom - ts.get_height() - 3))
 
     def _draw_menus(self, screen):
         """Draw action/move menus and prediction HUD."""
         if self.turn_mode == "ACTION_SELECT":
-            self.menu_root.draw(screen)
+            self.menu_root_p1.draw(screen)
+            self.menu_root_p2.draw(screen)
         elif self.turn_mode == "MOVE_SELECT":
-            self.menu_moves.draw(screen)
-            if self.menu_moves.options:
-                curr_name = self.menu_moves.options[
-                    self.menu_moves.selected_idx]
-                clean_name = curr_name[4:] if curr_name.startswith("[") else curr_name
-                curr_move  = next(
-                    (m for m in self.f1.profile.moves if m.name == clean_name), None)
-                self.prediction.draw(screen, self.f1.profile, curr_move)
+            if self.turn_owner == 1 and self.menu_moves_p1:
+                self.menu_moves_p1.draw(screen)
+                if self.menu_moves_p1.options:
+                    curr_name = self.menu_moves_p1.options[self.menu_moves_p1.selected_idx]
+                    clean_name = curr_name[4:] if curr_name.startswith("[") else curr_name
+                    curr_move  = next((m for m in self.f1.profile.moves if m.name == clean_name), None)
+                    self.prediction.draw(screen, self.f1.profile, curr_move)
+            elif self.turn_owner == 2 and self.menu_moves_p2:
+                self.menu_moves_p2.draw(screen)
+                if self.menu_moves_p2.options:
+                    curr_name = self.menu_moves_p2.options[self.menu_moves_p2.selected_idx]
+                    clean_name = curr_name[4:] if curr_name.startswith("[") else curr_name
+                    curr_move  = next((m for m in self.f2.profile.moves if m.name == clean_name), None)
+                    self.prediction.draw(screen, self.f2.profile, curr_move)
 
     def _draw_round_indicator(self, screen):
         """Draws round counter and win pips in the center-top area."""
